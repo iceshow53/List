@@ -10,31 +10,62 @@ typedef struct tagNode
 	int Value;
 }NODE;
 
-NODE* List = new NODE;
+NODE* List;
+NODE* End;
 int Length = 0;
 
 
 void Push(int _value);
 void PushFront(int _value);
 void insert(int count, int _value);
+void remove(int count);
+void removeBack();
 void ShuffleList();
 void PrintValueAt(int index);
 
 int main(void)
 {
+	/*int i = 10;
+	int* n = &i;
+
+	cout << i << endl;
+	cout << *n << endl;
+
+	cout << &i << endl;
+	cout << n << endl;
+
+	*n = 20;
+
+	cout << i << endl;
+	cout << *n << endl;
+	*/
+
+	
+
 	List = new NODE;
 
 	List->Next = nullptr;
 	List->Value = 0;
+
+	End = List;
 
 	Push(10);
 	Push(20);
 	Push(30);
 	Push(40);
 	Push(50);
-	insert(2, 25);
-	//PushFront(60);
-	//ShuffleList();
+	Push(60);
+	//insert(2, 25);
+	//remove(2);
+	removeBack();
+	Push(70);
+	removeBack();
+	removeBack();
+	removeBack();
+	Push(65);
+	Push(75);
+
+	ShuffleList();
 
 	// ** 두번째 노드를 nextNode 에 넘겨준다.
 	NODE* Node = List->Next;
@@ -57,15 +88,24 @@ int main(void)
 
 void Push(int _value)
 {
-	NODE* nextNode = List;
+	//NODE* nextNode = List;
 
-	while (nextNode->Next != nullptr)
-		nextNode = nextNode->Next;
+	//while (nextNode->Next != nullptr)
+	//	nextNode = nextNode->Next;
 
-	nextNode->Next = new NODE;
+	//nextNode->Next = new NODE;
 
-	nextNode->Next->Next = nullptr;
-	nextNode->Next->Value = _value;
+	//nextNode->Next->Next = nullptr;
+	//nextNode->Next->Value = _value;
+
+	NODE* node = new NODE;
+
+	node->Next = nullptr;
+	node->Value = _value;
+
+	End->Next = node;
+	End = node;
+	
 
 	++Length;
 }
@@ -79,6 +119,8 @@ void PushFront(int _value)
 	newNode->Value = _value;
 
 	List->Next = newNode;  // 새로운 노드를 리스트의 맨 앞에 연결
+
+	++Length;
 }
 
 void insert(int count, int _value)
@@ -114,6 +156,67 @@ void insert(int count, int _value)
 
 	// ** 새로운 노드가 가르키는 다음노드를 임시공간에 있던 노드로 배치
 	newNode->Next = tempNode;
+
+	++Length;
+}
+
+void remove(int count)
+{
+	// ** 리스트에 담긴 총 원소의 개수보다 count의 값이 크다면
+	// ** 값을 추가할 수 없으므로 리턴
+	if (Length < count)
+		return;
+
+	// ** 리스트를 들고옴
+	NODE* nextNode = List;
+	NODE* OldNode = nullptr;
+
+	// ** 카운트의 값만큼 다음 노드로 이동
+	while (0 < count)
+	{
+		--count;
+
+		// ** 다음 노드로 이동
+		nextNode = nextNode->Next;
+	}
+
+	// ** 다 다음 노드를 임시의 저장소에 저장
+	NODE* tempNode = nextNode->Next->Next;
+
+	// ** 다음 노드를 삭제
+	delete nextNode->Next;
+	nextNode->Next = nullptr;
+
+	// ** 삭제된 공간에 임시저장했던 노드를 셋팅
+	nextNode->Next = tempNode;
+	
+	--Length;
+}
+
+void removeBack()
+{
+	// ** 이전 노드와 현재 노드를 선언
+	NODE* preNode = List;
+	NODE* CurNode = List->Next;
+
+	// ** 끝부분의 노드와 그 이전노드를 찾기
+	while (CurNode->Next != nullptr)
+	{
+		preNode = preNode->Next;
+		CurNode = CurNode->Next;
+	}
+
+	// ** 끝부분에 도달한 현재 노드 삭제
+	delete CurNode;
+	CurNode = nullptr;
+
+	// ** 이전 노드의 다음 노드를 nullptr로 교체
+	preNode->Next = nullptr;
+
+	// ** 이전 노드를 노드의 끝으로 저장
+	End = preNode;
+
+	--Length;
 }
 
 void ShuffleList()
