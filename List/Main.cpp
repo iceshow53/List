@@ -50,22 +50,17 @@ int main(void)
 	End = List;
 
 	Push(10);
-	Push(20);
-	Push(30);
-	Push(40);
-	Push(50);
-	Push(60);
+	// Push(20);
+	// Push(30);
+	// Push(40);
+	// Push(50);
+	// Push(60);
 	//insert(2, 25);
 	//remove(2);
 	removeBack();
-	Push(70);
-	removeBack();
-	removeBack();
-	removeBack();
-	Push(65);
-	Push(75);
-
-	ShuffleList();
+	Push(100);
+	
+	// ShuffleList();
 
 	// ** 두번째 노드를 nextNode 에 넘겨준다.
 	NODE* Node = List->Next;
@@ -195,26 +190,37 @@ void remove(int count)
 
 void removeBack()
 {
-	// ** 이전 노드와 현재 노드를 선언
-	NODE* preNode = List;
-	NODE* CurNode = List->Next;
-
-	// ** 끝부분의 노드와 그 이전노드를 찾기
-	while (CurNode->Next != nullptr)
+	if (Length < 1)
+		return;
+	else if (Length < 2)
 	{
-		preNode = preNode->Next;
-		CurNode = CurNode->Next;
+		delete List->Next;
+		List->Next = nullptr;
+		End = List;
 	}
+	else
+	{
+		// ** 이전 노드와 현재 노드를 선언
+		NODE* preNode = List;
+		NODE* CurNode = List->Next;
 
-	// ** 끝부분에 도달한 현재 노드 삭제
-	delete CurNode;
-	CurNode = nullptr;
+		// ** 끝부분의 노드와 그 이전노드를 찾기
+		while (CurNode->Next != nullptr)
+		{
+			preNode = preNode->Next;
+			CurNode = CurNode->Next;
+		}
 
-	// ** 이전 노드의 다음 노드를 nullptr로 교체
-	preNode->Next = nullptr;
+		// ** 끝부분에 도달한 현재 노드 삭제
+		delete CurNode;
+		CurNode = nullptr;
 
-	// ** 이전 노드를 노드의 끝으로 저장
-	End = preNode;
+		// ** 삭제한 현재 노드의 이전 노드에 저장된 다음 노드를 nullptr로 초기화
+		preNode->Next = nullptr;
+
+		// ** 이전 노드를 노드의 끝으로 저장
+		End = preNode;
+	}
 
 	--Length;
 }
